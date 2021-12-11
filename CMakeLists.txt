@@ -3,4 +3,4 @@ project(Dekjstra)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Dekjstra main.cpp)
+add_executable(Dekjstra main.cpp Graphviz.h Graphviz.cpp)

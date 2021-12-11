@@ -1,14 +1,10 @@
-#include <iostream>
-#include <fstream>
+
 #include <vector>
 #include <set>
-#include <string>
-#include <utility>
-using namespace std;
-
+#include "Graphviz.h"
 const int INF = 1000000000;
 
-void Dejkstra(int s, int n, vector<vector<pair<int, int> > >& w) {//g
+vector<int> Dejkstra(int s, int n, vector<vector<pair<int, int> > >& w) {//g
     vector<int> d (n, INF),  p (n); //d is best distance, p is point
     d[s] = 0; //d from start to start is zero
     set < pair<int,int> > q ; //queue
@@ -28,12 +24,12 @@ void Dejkstra(int s, int n, vector<vector<pair<int, int> > >& w) {//g
             }
         }
     }
-    for (auto i : d) cout << i << " ";
-    cout << "\n";
+    return d;
 }
 
 int main() {
     fstream File("../Input.txt");
+
     if (!File.is_open()) {
         cerr << "Uh oh, SomeText.txt could not be opened for writing!" << endl;
         exit(1);
@@ -44,8 +40,10 @@ int main() {
     bool b = true; //to assign n once
     int it = 0; //iterator for rows
     int i = 0; //iterator for it
+    int s = 0; //start point
     vector<vector<pair<int, int> > > w;
 
+    //file reading
     while (!File.eof()) {
 
         vector<pair<int, int >> vec;
@@ -64,6 +62,7 @@ int main() {
         }
     }
 
+    //Outputting input vector
     cout << "Starting cout:\n";
     cout << "N is: " << n << endl;
     for (auto i: w) {
@@ -71,7 +70,24 @@ int main() {
             cout << j.first<< " " << j.second << "  ";
         cout << "\n";
     }
-    cout << "Ending cout\n";
+    cout << "Ending cout\n\n";
 
-    Dejkstra(0, n, w);
+    //Do graph
+    Graphviz graph;
+int count=0;
+string str;
+    for (auto i: w) {
+        for (auto j: i)
+            if(count < j.first)str += "\t" + to_string(count) + " -- " + to_string(j.first) + "[label=""" + to_string(j.second) + """]" + ";";
+            if(count!= n -1)str +="\n";
+            graph(str);
+            str.clear();
+            count ++;
+    }
+
+    //Outputing result
+    vector<int> res(Dejkstra(s, n, w));
+    for (auto i : res) cout << i << " ";
+    cout << "\n";
+
 }
